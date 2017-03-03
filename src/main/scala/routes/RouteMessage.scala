@@ -1,27 +1,30 @@
 package routes
 
-import akka.actor.{ActorRef, Props}
-import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
+import models.ModelMessage
+import utils.ActorConfig
+import spray.json._
+import spray.json.DefaultJsonProtocol._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import actors.ActorMessage
-import models.ModelMessage.Messages
-import utils.{ActorConfig, GetMessages}
-import akka.pattern.ask
-
-import scala.concurrent.Future
+import models.ModelMessage.Message
 
 object RouteMessage extends ActorConfig {
-
-  val actorMessage: ActorRef = thorn.actorOf(Props[ActorMessage], "actorMessage")
 
   val routes: Route =
     path("messages"){
       get{
-        val messages: Future[Messages] = (actorMessage ? GetMessages).mapTo[Messages]
-        complete(messages)
+        complete(ModelMessage.getMessages().map(_.toJson))
+      } ~
+        post { entity(as[Message]) { message =>
+          complete(ModelMessage.create(message).map(_.toJson))
+        }
+        }
+    } ~
+      pathPrefix("messages" / LongNumber) { id =>
+        get {
+          complete(ModelMessage.getMessagesByRoomId(id).map(_.toJson))
+        }
       }
-    }
 
 }

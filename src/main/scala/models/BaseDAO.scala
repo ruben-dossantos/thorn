@@ -1,11 +1,13 @@
 package models
 
+import models.ModelMessage.MessageTable
 import slick.lifted.TableQuery
-import scala.concurrent.Future
-import slick.profile.{FixedSqlAction, SqlAction, FixedSqlStreamingAction}
-import slick.dbio.{Effect, NoStream}
 
+import scala.concurrent.Future
+import slick.profile.{FixedSqlAction, FixedSqlStreamingAction, SqlAction}
+import slick.dbio.{Effect, NoStream}
 import models.ModelRoom.RoomTable
+import models.ModelUser.UserTable
 import utils.DatabaseConfig
 
 /**
@@ -13,6 +15,8 @@ import utils.DatabaseConfig
   */
 trait BaseDAO extends DatabaseConfig {
   val rooms = TableQuery[RoomTable]
+  val users = TableQuery[UserTable]
+  val messages = TableQuery[MessageTable]
 
   protected implicit def executeFromDb[A](action: SqlAction[A, NoStream, _ <: slick.dbio.Effect]): Future[A] = {
     db.run(action)

@@ -17,5 +17,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick"      %  "slick-hikaricp_2.11"              % "3.1.1",
   "org.slf4j"               %  "slf4j-nop"                        % "1.6.4",
   "org.postgresql"          %  "postgresql"                       % "9.4-1201-jdbc41",
-  "com.zaxxer"              %  "HikariCP"                         % "2.6.0"
+  "com.zaxxer"              %  "HikariCP"                         % "2.6.0",
+  "com.nulab-inc"           %% "scala-oauth2-core"                % "1.3.0",
+  "com.nulab-inc"           %% "akka-http-oauth2-provider"        % "1.3.0"
 )
